@@ -1,5 +1,8 @@
 import csv
+
+import prestito
 from strumento import Strumento
+from prestito import Prestito
 
 class DepositoStrumenti:
     def __init__(self, nome, responsabile):
@@ -9,6 +12,9 @@ class DepositoStrumenti:
 
         #lista contenente tutti gli oggetti
         self.lista_strumenti = []
+        #lista prestiti
+        self.lista_prestito = []
+        self.num_prestiti = 0
 
         # TODO
 
@@ -54,18 +60,37 @@ class DepositoStrumenti:
         """Aggiunge uno strumento nel deposito: aggiunge solo nel sistema e non aggiorna il file"""
         c = f'S{len(self.lista_strumenti)+1}'
         self.lista_strumenti.append(Strumento(c, tipo, marca, anno_acquisto, valore))
-
         return self.lista_strumenti
         # TODO
 
     def strumenti_ordinati_per_marca(self):
         """Ordina gli strumenti per marca in ordine alfabetico"""
+        return sorted(self.lista_strumenti, key=lambda s: s.marca)
         # TODO
 
     def nuovo_prestito(self, data, id_strumento, cognome_allievo):
         """Crea un nuovo prestito"""
+        #codice
+        #se codS non presente o già in lista --> errore generico
+        for s in self.lista_strumenti:
+            if s.codunivoco == id_strumento:
+                #vedere se strumento è già prestato
+                for p in self.lista_prestito:
+                    if id_strumento == p.id_strumento:
+                        raise Exception("Lo strumento è già in prestito")
+
+                self.num_prestiti += 1
+                prestito = Prestito(f'P{self.num_prestiti}', data, id_strumento, cognome_allievo)
+                self.lista_prestito.append(prestito)
+                return prestito
+        raise Exception("Lo strumento non è presente nel deposito")
         # TODO
 
     def termina_prestito(self, id_prestito):
         """Termina un prestito in atto"""
+        for p in self.lista_prestito:
+            if id_prestito == p.codP:
+                self.lista_prestito.remove(p)
+                return self.lista_prestito
+        raise Exception("Il prestito non esiste")
         # TODO
