@@ -1,3 +1,4 @@
+#classe Prestito per gestire gli oggetti 'prestito'
 class Prestito:
     def __init__(self, codP, data, id_strumento, cognome_allievo):
         self.codP = codP

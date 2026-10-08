@@ -1,3 +1,4 @@
+#classe Strumento per gestire gli oggetti 'strumento'
 class Strumento:
     def __init__(self, codUnivoco, tipo, marca, anno_acquisto, valore):
         self.codUnivoco = codUnivoco

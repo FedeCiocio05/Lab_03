@@ -14,6 +14,7 @@ class DepositoStrumenti:
         self.lista_strumenti = []
         #lista prestiti
         self.lista_prestito = []
+        #variabile globale per gestire i codici progressivi dei prestiti
         self.num_prestiti = 0
 
         # TODO
@@ -26,17 +27,16 @@ class DepositoStrumenti:
                 for row in reader:  # per ogni riga nel file
                     try:
                         # estraggo i singoli valori dalle colonne
-
                         codUnivoco = row[0]
                         tipo = row[1]
                         marca = row[2]
                         anno_acquisto = int(row[3])
                         valore = float(row[4])
 
-                        # creo un oggetto Auto con i dati della riga
+                        # creo un oggetto Strumento con i dati della riga
                         strumento = Strumento(codUnivoco, tipo, marca, anno_acquisto, valore)
 
-                        # aggiungo l’auto alla lista
+                        # aggiungo lo strumento alla lista
                         self.lista_strumenti.append(strumento)
 
                     except IndexError:
@@ -58,6 +58,7 @@ class DepositoStrumenti:
 
     def aggiungi_strumento(self, tipo, marca, anno_acquisto, valore):
         """Aggiunge uno strumento nel deposito: aggiunge solo nel sistema e non aggiorna il file"""
+        #creo il codice strumento autonomamente
         c = f'S{len(self.lista_strumenti)+1}'
         self.lista_strumenti.append(Strumento(c, tipo, marca, anno_acquisto, valore))
         return self.lista_strumenti
@@ -70,8 +71,7 @@ class DepositoStrumenti:
 
     def nuovo_prestito(self, data, id_strumento, cognome_allievo):
         """Crea un nuovo prestito"""
-        #codice
-        #se codS non presente o già in lista --> errore generico
+        #se codS non presente o già in lista --> errore
         for s in self.lista_strumenti:
             if s.codunivoco == id_strumento:
                 #vedere se strumento è già prestato
@@ -79,7 +79,9 @@ class DepositoStrumenti:
                     if id_strumento == p.id_strumento:
                         raise Exception("Lo strumento è già in prestito")
 
+                #aumento contatore totale dei prestiti
                 self.num_prestiti += 1
+                #creo oggetto prestito e lo aggiungo alla lista
                 prestito = Prestito(f'P{self.num_prestiti}', data, id_strumento, cognome_allievo)
                 self.lista_prestito.append(prestito)
                 return prestito
@@ -88,6 +90,7 @@ class DepositoStrumenti:
 
     def termina_prestito(self, id_prestito):
         """Termina un prestito in atto"""
+        #se prestito esiste lo elimino altrimenti --> errore
         for p in self.lista_prestito:
             if id_prestito == p.codP:
                 self.lista_prestito.remove(p)

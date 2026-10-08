@@ -20,6 +20,7 @@ def main():
 
         if scelta == "1":
             nuovo_responsabile = input("Inserisci il nuovo responsabile: ")
+            #gestione del cambio del responsabile per il deposito
             deposito.responsabile = nuovo_responsabile
             # TODO: Aggiorna responsabile nel sistema
 
